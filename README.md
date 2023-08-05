@@ -8,9 +8,7 @@
  <a href="#-layout">Layout</a> • 
  <a href="#-como-executar-o-projeto">Como executar</a> • 
  <a href="#-tecnologias">Tecnologias</a> • 
- <a href="#-contribuidores">Contribuidores</a> • 
  <a href="#-autor">Autor</a> • 
- <a href="#user-content--licença">Licença</a>
 </p>
 
 ## 💻 Sobre o projeto
@@ -34,8 +32,7 @@
   
   <p align="center">
     <img alt="Home" src="./src/assets/home.jpg" width="200px">
-
-    <img alt="Detalhes" src="./src/assets/details.jpg" width="200px">
+    <img alt="Detalhes" src="./src/assets/details.jpg" width="200px">	
   </p>
 
 ---
