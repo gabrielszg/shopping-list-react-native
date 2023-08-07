@@ -63,7 +63,7 @@ android\app\build\outputs\apk\release\app-release.apk
 -   **[Checkbox](https://reactnative.dev/docs/checkbox)**
 -   **[Toast Message](https://www.npmjs.com/package/react-native-toast-message)**
 
-## 🦸 Autor
+## 🦸🏻‍♂️ Autor
 
 <a href="https://github.com/gabrielszg">
   <p>@gabrielszg</p>
