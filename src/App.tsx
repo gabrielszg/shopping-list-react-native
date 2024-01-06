@@ -17,6 +17,7 @@ import {
   Text,
   StatusBar,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 
 interface Product {
@@ -38,6 +39,18 @@ function App(): JSX.Element {
     }
   };
 
+  const renderedButtonDeleteAll = products.length === 0 ? false : true;
+
+  const showDeleteAllButtonAlert = () =>
+    Alert.alert('Lista de compras', 'Deseja excluir todos os seus itens?', [
+      {text: 'Cancelar'},
+      {
+        text: 'Ok',
+        onPress: handleDeleteAll,
+        style: 'default',
+      },
+    ]);
+
   const handleDeleteAll = () => {
     AsyncStorage.removeItem('products');
     setProducts([]);
@@ -53,10 +66,14 @@ function App(): JSX.Element {
 
       <Header />
 
-      <Pressable style={styles.btnDeleteAll} onPress={handleDeleteAll}>
-        <FontAwesomeIcon icon={faTrash} color="#c00" />
-        <Text style={styles.btnDeleteAllTitle}>Excluir Todos</Text>
-      </Pressable>
+      {renderedButtonDeleteAll && (
+        <Pressable
+          style={styles.btnDeleteAll}
+          onPress={showDeleteAllButtonAlert}>
+          <FontAwesomeIcon icon={faTrash} color="#c00" />
+          <Text style={styles.btnDeleteAllTitle}>Excluir Todos</Text>
+        </Pressable>
+      )}
 
       <Grid products={products} setProducts={setProducts} />
 
