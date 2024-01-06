@@ -19,6 +19,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import Card from './components/Card';
 
 interface Product {
   id: number;
@@ -39,6 +40,7 @@ function App(): JSX.Element {
     }
   };
 
+  const renderedCard = products.length === 0 ? true : false;
   const renderedButtonDeleteAll = products.length === 0 ? false : true;
 
   const showDeleteAllButtonAlert = () =>
@@ -65,6 +67,8 @@ function App(): JSX.Element {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
       <Header />
+
+      {renderedCard && <Card modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} />}
 
       {renderedButtonDeleteAll && (
         <Pressable
