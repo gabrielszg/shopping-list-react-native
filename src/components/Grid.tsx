@@ -14,6 +14,7 @@ import {
   Text,
   View,
   ListRenderItemInfo,
+  Alert,
 } from 'react-native';
 
 interface Products {
@@ -74,7 +75,17 @@ function Grid({products, setProducts}: Products): JSX.Element {
     AsyncStorage.setItem('products', JSON.stringify(newArray));
   };
 
-  const handleDelete = (index: any): void => {
+  const showDeleteButtonAlert = (index: number): void =>
+    Alert.alert('Lista de compras', 'Deseja excluir este item?', [
+      {text: 'Cancelar'},
+      {
+        text: 'Ok',
+        onPress: () => handleDelete(index),
+        style: 'default',
+      },
+    ]);
+
+  const handleDelete = (index: number): void => {
     const product = products[index];
 
     products.splice(index, 1);
@@ -108,7 +119,7 @@ function Grid({products, setProducts}: Products): JSX.Element {
           </Text>
         </View>
         <Text style={styles.textQuantity}>{item.quantity}</Text>
-        <Pressable onPress={() => handleDelete(index)}>
+        <Pressable onPress={() => showDeleteButtonAlert(index)}>
           <FontAwesomeIcon icon={faTrash} color="#c00" />
         </Pressable>
       </View>
