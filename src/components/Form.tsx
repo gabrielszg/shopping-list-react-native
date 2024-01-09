@@ -82,7 +82,7 @@ function Form({products, setProducts}: Product): JSX.Element {
             onChangeText={setQuantity}
             value={quantity}
             placeholder="1"
-            placeholderTextColor={'#000'}
+            placeholderTextColor={'#808080'}
             keyboardType="numeric"
           />
         </View>
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderRadius: 20,
+    borderColor: '#808080',
     textTransform: 'uppercase',
     color: '#000',
   },
@@ -124,6 +125,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     borderWidth: 1,
     borderRadius: 20,
+    borderColor: '#808080',
     textTransform: 'uppercase',
     color: '#000',
   },
@@ -133,10 +135,11 @@ const styles = StyleSheet.create({
   },
 
   btnAdd: {
-    alignSelf: 'center',
     flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 20,
     border: 'none',
     backgroundColor: 'rgb(57, 57, 226)',
   },
@@ -144,7 +147,6 @@ const styles = StyleSheet.create({
   btnAddTitle: {
     fontSize: 16,
     color: '#fff',
-    textAlign: 'center',
     marginHorizontal: 8,
   },
 });
