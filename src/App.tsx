@@ -5,7 +5,6 @@ import Grid from './components/Grid';
 import ModalComp from './components/ModalComp';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-toast-message';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faTrash, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
@@ -99,8 +98,6 @@ function App(): JSX.Element {
         products={products}
         setProducts={setProducts}
       />
-
-      <Toast />
     </SafeAreaView>
   );
 }
@@ -118,7 +115,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     border: 'none',
     backgroundColor: 'rgb(57, 57, 226)',
-    marginTop: 160,
+    marginTop: 135,
+    marginLeft: 15,
     position: 'absolute',
     top: 0,
     zIndex: 1,
