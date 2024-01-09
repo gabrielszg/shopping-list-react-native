@@ -120,7 +120,7 @@ function Grid({products, setProducts}: Products): JSX.Element {
         </View>
         <Text style={styles.textQuantity}>{item.quantity}</Text>
         <Pressable onPress={() => showDeleteButtonAlert(index)}>
-          <FontAwesomeIcon icon={faTrash} color="#c00" />
+          <FontAwesomeIcon icon={faTrash} color="#c00" size={20} />
         </Pressable>
       </View>
     );
@@ -139,8 +139,8 @@ function Grid({products, setProducts}: Products): JSX.Element {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 220,
-    marginHorizontal: 5,
+    marginTop: 180,
+    marginHorizontal: 15,
   },
 
   viewList: {
@@ -148,7 +148,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginVertical: 10,
-    padding: 10,
+    padding: 15,
     borderRadius: 10,
     backgroundColor: '#fff',
   },
