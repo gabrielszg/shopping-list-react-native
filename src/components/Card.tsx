@@ -27,9 +27,9 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: '#fff',
     borderRadius: 10,
-    marginTop: 160,
-    marginLeft: 10,
-    marginRight: 10,
+    marginTop: 135,
+    marginLeft: 15,
+    marginRight: 15,
     padding: 20,
   },
 
@@ -49,13 +49,11 @@ const styles = StyleSheet.create({
   },
 
   btnAddNewList: {
-    alignSelf: 'center',
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 320,
     padding: 10,
-    borderRadius: 5,
+    borderRadius: 20,
     border: 'none',
     backgroundColor: 'rgb(57, 57, 226)',
   },
