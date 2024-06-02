@@ -6,6 +6,7 @@ import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faXmarkCircle} from '@fortawesome/free-solid-svg-icons';
 
 import {View, Modal, Pressable, StyleSheet} from 'react-native';
+import Toast from 'react-native-toast-message';
 
 interface Props {
   products: any[];
@@ -21,9 +22,9 @@ function ModalComp({
   setIsOpen,
 }: Props): JSX.Element {
   return (
-    <View style={styles.centeredView}>
+    <View style={styles.container}>
       <Modal
-        animationType="fade"
+        animationType="slide"
         transparent={true}
         visible={modalIsOpen}
         onRequestClose={() => {
@@ -34,31 +35,38 @@ function ModalComp({
             <Pressable
               style={styles.btnCloseModal}
               onPress={() => setIsOpen(!modalIsOpen)}>
-              <FontAwesomeIcon icon={faXmarkCircle} size={25} />
+              <FontAwesomeIcon icon={faXmarkCircle} size={20} />
             </Pressable>
 
             <Form products={products} setProducts={setProducts} />
           </View>
         </View>
+
+        <Toast />
       </Modal>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+
   centeredView: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 22,
+    /* marginTop: 120, */
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
 
   modalView: {
     margin: 20,
-    backgroundColor: 'white',
+    backgroundColor: '#fff',
     borderRadius: 20,
-    padding: 35,
-    alignItems: 'center',
+    padding: 15,
+    alignItems: 'flex-start',
     shadowColor: '#000',
     shadowOffset: {
       width: 0,

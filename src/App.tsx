@@ -5,7 +5,6 @@ import Grid from './components/Grid';
 import ModalComp from './components/ModalComp';
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Toast from 'react-native-toast-message';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faTrash, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
@@ -19,6 +18,7 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import Card from './components/Card';
 
 interface Product {
   id: number;
@@ -39,6 +39,7 @@ function App(): JSX.Element {
     }
   };
 
+  const renderedCard = products.length === 0 ? true : false;
   const renderedButtonDeleteAll = products.length === 0 ? false : true;
 
   const showDeleteAllButtonAlert = () =>
@@ -65,6 +66,8 @@ function App(): JSX.Element {
       <StatusBar barStyle={'dark-content'} backgroundColor={'#fff'} />
 
       <Header />
+
+      {renderedCard && <Card modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} />}
 
       {renderedButtonDeleteAll && (
         <Pressable
@@ -95,8 +98,6 @@ function App(): JSX.Element {
         products={products}
         setProducts={setProducts}
       />
-
-      <Toast />
     </SafeAreaView>
   );
 }
@@ -114,7 +115,8 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     border: 'none',
     backgroundColor: 'rgb(57, 57, 226)',
-    marginTop: 160,
+    marginTop: 135,
+    marginLeft: 15,
     position: 'absolute',
     top: 0,
     zIndex: 1,
