@@ -4,6 +4,8 @@ import Header from './components/Header';
 import Grid from './components/Grid';
 import ModalComp from './components/ModalComp';
 
+import {Product} from './models/product';
+import {removeData} from './services/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -19,13 +21,6 @@ import {
   Alert,
 } from 'react-native';
 import Card from './components/Card';
-
-interface Product {
-  id: number;
-  name: string;
-  quantity: number;
-  isChecked: boolean;
-}
 
 function App(): JSX.Element {
   const [products, setProducts] = useState<Product[]>([]);
@@ -53,7 +48,7 @@ function App(): JSX.Element {
     ]);
 
   const handleDeleteAll = () => {
-    AsyncStorage.removeItem('products');
+    removeData;
     setProducts([]);
   };
 

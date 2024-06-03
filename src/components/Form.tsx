@@ -1,6 +1,7 @@
 import React, {useState} from 'react';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Product} from '../models/product';
+import {storeData} from '../services/api';
 import Toast from 'react-native-toast-message';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -9,16 +10,16 @@ import {faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 import {SafeAreaView, Text, TextInput, View, Pressable} from 'react-native';
 import {styles} from '../styles/form/style';
 
-interface Product {
+interface Props {
   products: any[];
   setProducts: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-function Form({products, setProducts}: Product): JSX.Element {
+function Form({products, setProducts}: Props): JSX.Element {
   const [name, setName] = useState('');
   const [quantity, setQuantity] = useState('');
 
-  let product = {
+  let product: Product = {
     id: 0,
     name: '',
     quantity: 1,
@@ -38,9 +39,9 @@ function Form({products, setProducts}: Product): JSX.Element {
     product.quantity =
       Number(quantity) > 1 ? Number(quantity) : product.quantity;
 
-    const newProducts = [...products, product];
+    const newProducts: Product[] = [...products, product];
     setProducts(newProducts);
-    AsyncStorage.setItem('products', JSON.stringify(newProducts));
+    storeData(newProducts);
 
     Toast.show({
       type: 'success',

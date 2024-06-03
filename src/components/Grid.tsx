@@ -1,7 +1,8 @@
 import React, {useEffect, useState} from 'react';
 
+import {Product} from '../models/product';
+import {storeData} from '../services/api';
 import CheckBox from '@react-native-community/checkbox';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
@@ -17,19 +18,12 @@ import {
 } from 'react-native';
 import {styles} from '../styles/grid/style';
 
-interface Products {
-  products: any[];
+interface Props {
+  products: Product[];
   setProducts: React.Dispatch<React.SetStateAction<any[]>>;
 }
 
-type Product = {
-  id: number;
-  name: string;
-  quantity: number;
-  isChecked: boolean;
-};
-
-function Grid({products, setProducts}: Products): JSX.Element {
+function Grid({products, setProducts}: Props): JSX.Element {
   const [isSelected, setSelection] = useState<boolean[]>([]);
 
   const handleCheckboxChange = (index: number) => {
@@ -61,7 +55,7 @@ function Grid({products, setProducts}: Products): JSX.Element {
     newArray[index] = product;
 
     setProducts(newArray);
-    AsyncStorage.setItem('products', JSON.stringify(newArray));
+    storeData(newArray);
   };
 
   const uncheckedProductCheckbox = (product: Product) => {
@@ -72,7 +66,7 @@ function Grid({products, setProducts}: Products): JSX.Element {
     newArray[index] = product;
 
     setProducts(newArray);
-    AsyncStorage.setItem('products', JSON.stringify(newArray));
+    storeData(newArray);
   };
 
   const showDeleteButtonAlert = (index: number): void =>
@@ -93,7 +87,7 @@ function Grid({products, setProducts}: Products): JSX.Element {
     const newArray = products.filter(item => item !== product);
 
     setProducts(newArray);
-    AsyncStorage.setItem('products', JSON.stringify(newArray));
+    storeData(newArray);
   };
 
   useEffect(() => {
