@@ -5,7 +5,7 @@ import Grid from './components/Grid';
 import ModalComp from './components/ModalComp';
 
 import {Product} from './models/product';
-import {retrieveData, removeData} from './services/api';
+import {retrieveData, removeData} from './repositories/api';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faTrash, faPlusCircle} from '@fortawesome/free-solid-svg-icons';

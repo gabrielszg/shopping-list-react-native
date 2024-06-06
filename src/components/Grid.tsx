@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {Product} from '../models/product';
-import {storeData} from '../services/api';
+import {storeData} from '../repositories/api';
 import CheckBox from '@react-native-community/checkbox';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';

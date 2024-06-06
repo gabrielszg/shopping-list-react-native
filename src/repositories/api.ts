@@ -3,9 +3,9 @@ import {Product} from '../models/product';
 
 const KEY: string = 'products';
 
-export const storeData = async (productList: Product[]) => {
+export const storeData = async (products: Product[]) => {
   try {
-    await AsyncStorage.setItem(KEY, JSON.stringify(productList));
+    await AsyncStorage.setItem(KEY, JSON.stringify(products));
   } catch (error: unknown) {
     if (error instanceof Error) {
       error.message;
