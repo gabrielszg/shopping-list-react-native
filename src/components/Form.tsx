@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 
+import {FormInput} from '../models/formInput';
 import {Product} from '../models/product';
-import {storeData} from '../services/api';
+import {storeData} from '../repositories/api';
 import Toast from 'react-native-toast-message';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -16,8 +17,14 @@ interface Props {
 }
 
 function Form({products, setProducts}: Props): JSX.Element {
-  const [name, setName] = useState('');
-  const [quantity, setQuantity] = useState('');
+  const [input, setInput] = useState<FormInput>({name: '', quantity: ''});
+
+  const updateState = (key: string, value: string) => {
+    setInput(oldState => ({
+      ...oldState,
+      [key]: value,
+    }));
+  };
 
   let product: Product = {
     id: 0,
@@ -27,17 +34,19 @@ function Form({products, setProducts}: Props): JSX.Element {
   };
 
   const handleSubmit = () => {
-    if (name === '') {
+    if (input.name === '') {
       return Toast.show({
         type: 'info',
         text1: 'Informe o nome do Produto!',
       });
     }
 
-    product.id = Number(Math.random() * 100);
-    product.name = name.toUpperCase();
-    product.quantity =
-      Number(quantity) > 1 ? Number(quantity) : product.quantity;
+    const nameToUpperCase = input.name.toUpperCase();
+    const quantityStringToNumber = Number(input.quantity);
+
+    product.id = generateId();
+    product.name = nameToUpperCase;
+    product.quantity = isQuantityTogreaterThanOne(quantityStringToNumber);
 
     const newProducts: Product[] = [...products, product];
     setProducts(newProducts);
@@ -49,9 +58,12 @@ function Form({products, setProducts}: Props): JSX.Element {
       position: 'top',
     });
 
-    setName('');
-    setQuantity('');
+    setInput({name: '', quantity: ''});
   };
+
+  const generateId = () => Number(Math.random() * 100);
+  const isQuantityTogreaterThanOne = (value: number) =>
+    value > 1 ? value : product.quantity;
 
   return (
     <SafeAreaView>
@@ -62,8 +74,8 @@ function Form({products, setProducts}: Props): JSX.Element {
             style={styles.inputNameProduct}
             placeholder="Exemplo: Arroz"
             placeholderTextColor={'#808080'}
-            onChangeText={setName}
-            value={name}
+            onChangeText={name => updateState('name', name)}
+            value={input.name}
             onPressIn={() => Toast.hide()}
             onKeyPress={() => Toast.hide()}
             autoCapitalize="characters"
@@ -74,8 +86,8 @@ function Form({products, setProducts}: Props): JSX.Element {
           <Text style={styles.text}>Qtd</Text>
           <TextInput
             style={styles.inputQuantity}
-            onChangeText={setQuantity}
-            value={quantity}
+            onChangeText={qtd => updateState('quantity', qtd)}
+            value={input.quantity}
             placeholder="1"
             placeholderTextColor={'#808080'}
             keyboardType="numeric"
