@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 
 import {FormInput} from '../models/formInput';
 import {Product} from '../models/product';
-import {storeData} from '../repositories/api';
+import {saveProduct} from '../services/service';
 import Toast from 'react-native-toast-message';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -44,13 +44,11 @@ function Form({products, setProducts}: Props): JSX.Element {
     const nameToUpperCase = input.name.toUpperCase();
     const quantityStringToNumber = Number(input.quantity);
 
-    product.id = generateId();
     product.name = nameToUpperCase;
-    product.quantity = isQuantityTogreaterThanOne(quantityStringToNumber);
+    product.quantity = quantityStringToNumber;
 
-    const newProducts: Product[] = [...products, product];
+    const newProducts = saveProduct(products, product);
     setProducts(newProducts);
-    storeData(newProducts);
 
     Toast.show({
       type: 'success',
@@ -60,10 +58,6 @@ function Form({products, setProducts}: Props): JSX.Element {
 
     setInput({name: '', quantity: ''});
   };
-
-  const generateId = () => Number(Math.random() * 100);
-  const isQuantityTogreaterThanOne = (value: number) =>
-    value > 1 ? value : product.quantity;
 
   return (
     <SafeAreaView>

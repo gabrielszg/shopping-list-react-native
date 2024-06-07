@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 
 import {Product} from '../models/product';
-import {storeData} from '../repositories/api';
+import {removeProduct, updateProduct} from '../services/service';
 import CheckBox from '@react-native-community/checkbox';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
@@ -30,11 +30,7 @@ function Grid({products, setProducts}: Props): JSX.Element {
     const isChecked = updatedCheckedState(index);
     const productEdit = products[index];
 
-    if (isChecked) {
-      checkedProductCheckbox(productEdit);
-    } else {
-      uncheckedProductCheckbox(productEdit);
-    }
+    updateProduct(products, productEdit, isChecked);
   };
 
   const updatedCheckedState = (position: number) => {
@@ -45,28 +41,6 @@ function Grid({products, setProducts}: Props): JSX.Element {
     setSelection(updateArray);
 
     return updateArray[position];
-  };
-
-  const checkedProductCheckbox = (product: Product) => {
-    const index = products.indexOf(product);
-    let newArray = [...products];
-
-    product.isChecked = true;
-    newArray[index] = product;
-
-    setProducts(newArray);
-    storeData(newArray);
-  };
-
-  const uncheckedProductCheckbox = (product: Product) => {
-    const index = products.indexOf(product);
-    let newArray = [...products];
-
-    product.isChecked = false;
-    newArray[index] = product;
-
-    setProducts(newArray);
-    storeData(newArray);
   };
 
   const showDeleteButtonAlert = (index: number): void =>
@@ -80,14 +54,8 @@ function Grid({products, setProducts}: Props): JSX.Element {
     ]);
 
   const handleDelete = (index: number): void => {
-    const product = products[index];
-
-    products.splice(index, 1);
-
-    const newArray = products.filter(item => item !== product);
-
+    const newArray = removeProduct(products, index);
     setProducts(newArray);
-    storeData(newArray);
   };
 
   useEffect(() => {
