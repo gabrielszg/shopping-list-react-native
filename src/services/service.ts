@@ -1,5 +1,13 @@
+import {Alert} from 'react-native';
 import {Product} from '../models/product';
-import {storeData} from '../repositories/api';
+import {storeData, retrieveData, removeData} from '../repositories/api';
+
+export const findAllProducts = () => {
+  const result = retrieveData()
+    .then(response => response)
+    .catch(() => Alert.alert('Ops ocorreu um erro!', 'erro'));
+  return result;
+};
 
 export const saveProduct = (
   products: Product[],
@@ -38,6 +46,8 @@ export const removeProduct = (products: Product[], index: number) => {
   storeData(newArray);
   return newArray;
 };
+
+export const removeAllproducts = () => removeData();
 
 const generateId = () => Number(Math.random() * 100);
 

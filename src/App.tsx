@@ -5,7 +5,7 @@ import Grid from './components/Grid';
 import ModalComp from './components/ModalComp';
 
 import {Product} from './models/product';
-import {retrieveData, removeData} from './repositories/api';
+import {findAllProducts, removeAllproducts} from './services/service';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faTrash, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
@@ -26,13 +26,11 @@ function App(): JSX.Element {
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const getProducts = () => {
-    retrieveData()
-      .then(result => {
-        if (result !== null) {
-          setProducts(JSON.parse(String(result)));
-        }
-      })
-      .catch(() => Alert.alert('Ops ocorreu um erro!', 'erro'));
+    findAllProducts().then(result => {
+      if (result !== null) {
+        setProducts(JSON.parse(String(result)));
+      }
+    }).catch;
   };
 
   const renderedCard = products.length === 0 ? true : false;
@@ -49,7 +47,7 @@ function App(): JSX.Element {
     ]);
 
   const handleDeleteAll = () => {
-    removeData();
+    removeAllproducts();
     setProducts([]);
   };
 
