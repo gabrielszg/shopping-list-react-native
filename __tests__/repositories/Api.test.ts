@@ -4,7 +4,7 @@
 
 import 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {retrieveData, storeData} from '../../src/repositories/api';
+import {removeData, retrieveData, storeData} from '../../src/repositories/api';
 import {Product} from '../../src/models/product';
 
 import {describe, it, expect, jest} from '@jest/globals';
@@ -39,5 +39,10 @@ describe('Api AsyncStorage', () => {
   it('when you enter the correct key, the list of saved products returns', async () => {
     await retrieveData();
     expect(AsyncStorage.getItem).toBeCalledWith('products');
+  });
+
+  it('remove by passing the correct key', async () => {
+    await removeData();
+    expect(AsyncStorage.removeItem).toBeCalledWith('products');
   });
 });
