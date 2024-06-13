@@ -8,7 +8,7 @@ export const storeData = async (products: Product[]) => {
     await AsyncStorage.setItem(KEY, JSON.stringify(products));
   } catch (error: unknown) {
     if (error instanceof Error) {
-      error.message;
+      throw new Error(error.message);
     }
   }
 };
@@ -18,7 +18,7 @@ export const retrieveData = async () => {
     return await AsyncStorage.getItem(KEY);
   } catch (error: unknown) {
     if (error instanceof Error) {
-      error.message;
+      throw new Error(error.message);
     }
   }
 };
@@ -28,7 +28,7 @@ export const removeData = async () => {
     await AsyncStorage.removeItem(KEY);
   } catch (error: unknown) {
     if (error instanceof Error) {
-      error.message;
+      throw new Error(error.message);
     }
   }
 };
