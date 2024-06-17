@@ -4,8 +4,8 @@
 
 import 'react-native';
 import React from 'react';
-import {describe, it, expect} from '@jest/globals';
-import {render} from '@testing-library/react-native';
+import {describe, it, expect, jest} from '@jest/globals';
+import {render, fireEvent} from '@testing-library/react-native';
 import Card from '../../../src/components/Card';
 
 describe('Card Test', () => {
@@ -38,5 +38,19 @@ describe('Card Test', () => {
 
     const btnTitle = getByText('Começar minha lista');
     expect(btnTitle).toBeTruthy();
+  });
+
+  it('call setIsOpen with value true when button was pressed', () => {
+    const mockSetIsOpen = jest.fn();
+
+    const {getByTestId} = render(
+      <Card modalIsOpen={false} setIsOpen={mockSetIsOpen} />,
+    );
+
+    const button = getByTestId('btnAddNewList');
+
+    fireEvent.press(button);
+
+    expect(mockSetIsOpen).toBeCalledWith(true);
   });
 });
