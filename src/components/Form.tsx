@@ -12,8 +12,8 @@ import {SafeAreaView, Text, TextInput, View, Pressable} from 'react-native';
 import {styles} from '../styles/form/style';
 
 interface Props {
-  products: any[];
-  setProducts: React.Dispatch<React.SetStateAction<any[]>>;
+  products: Product[];
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
 }
 
 function Form({products, setProducts}: Props): JSX.Element {
@@ -65,6 +65,7 @@ function Form({products, setProducts}: Props): JSX.Element {
         <View>
           <Text style={styles.text}>Novo Produto</Text>
           <TextInput
+            testID="productName"
             style={styles.inputNameProduct}
             placeholder="Exemplo: Arroz"
             placeholderTextColor={'#808080'}
@@ -79,6 +80,7 @@ function Form({products, setProducts}: Props): JSX.Element {
         <View style={styles.viewQuantity}>
           <Text style={styles.text}>Qtd</Text>
           <TextInput
+            testID="productQuantity"
             style={styles.inputQuantity}
             onChangeText={qtd => updateState('quantity', qtd)}
             value={input.quantity}
@@ -89,7 +91,7 @@ function Form({products, setProducts}: Props): JSX.Element {
         </View>
       </View>
 
-      <Pressable style={styles.btnAdd} onPress={handleSubmit}>
+      <Pressable testID="submit" style={styles.btnAdd} onPress={handleSubmit}>
         <FontAwesomeIcon icon={faPlusCircle} color="#008000" />
         <Text style={styles.btnAddTitle}>Adicionar</Text>
       </Pressable>
