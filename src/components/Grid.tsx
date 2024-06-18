@@ -20,7 +20,7 @@ import {styles} from '../styles/grid/style';
 
 interface Props {
   products: Product[];
-  setProducts: React.Dispatch<React.SetStateAction<any[]>>;
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
 }
 
 function Grid({products, setProducts}: Props): JSX.Element {
