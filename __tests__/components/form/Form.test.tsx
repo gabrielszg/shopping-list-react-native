@@ -14,6 +14,10 @@ jest.mock('react-native-toast-message', () => ({
   hide: jest.fn(),
 }));
 
+jest.mock('@react-native-async-storage/async-storage', () =>
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
+);
+
 const mockSetProducts = jest.fn();
 
 describe('Form test', () => {
@@ -49,7 +53,7 @@ describe('Form test', () => {
     expect(productQuantityInput.props.value).toEqual('');
   });
 
-  it('should display an error alert when product name is empty', async () => {
+  it('should display an error alert when product name is empty', () => {
     const {getByTestId} = render(
       <Form products={[]} setProducts={mockSetProducts} />,
     );
@@ -62,6 +66,30 @@ describe('Form test', () => {
     expect(Toast.show).toBeCalledWith({
       type: 'info',
       text1: 'Informe o nome do Produto!',
+    });
+  });
+
+  it('should display success alert when submit form', () => {
+    const {getByTestId} = render(
+      <Form products={[]} setProducts={mockSetProducts} />,
+    );
+
+    const expectProductNameInput = 'Feijão';
+    const expectProductQuantityInput = '1';
+    const submitButton = getByTestId('submit');
+
+    fireEvent.changeText(getByTestId('productName'), expectProductNameInput);
+    fireEvent.changeText(
+      getByTestId('productQuantity'),
+      expectProductQuantityInput,
+    );
+    fireEvent.press(submitButton);
+
+    expect(Toast.show).toBeCalled();
+    expect(Toast.show).toBeCalledWith({
+      type: 'success',
+      text1: 'Produto adicionado com sucesso!',
+      position: 'top',
     });
   });
 });
