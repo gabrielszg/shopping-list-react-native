@@ -69,11 +69,13 @@ function Grid({products, setProducts}: Props): JSX.Element {
       <View style={styles.viewList}>
         <View style={styles.viewCheckboxName}>
           <CheckBox
+            testID="checkbox"
             value={item.isChecked}
             onChange={() => handleCheckboxChange(index)}
             tintColors={{true: '#008000', false: '#000'}}
           />
           <Text
+            testID="textName"
             style={
               item.isChecked ? styles.textNameStrikethrough : styles.textName
             }>
@@ -81,7 +83,9 @@ function Grid({products, setProducts}: Props): JSX.Element {
           </Text>
         </View>
         <Text style={styles.textQuantity}>{item.quantity}</Text>
-        <Pressable onPress={() => showDeleteButtonAlert(index)}>
+        <Pressable
+          testID="deleteButton"
+          onPress={() => showDeleteButtonAlert(index)}>
           <FontAwesomeIcon icon={faTrash} color="#c00" size={20} />
         </Pressable>
       </View>
