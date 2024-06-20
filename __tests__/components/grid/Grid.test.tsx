@@ -2,12 +2,14 @@
  * @format
  */
 
-import 'react-native';
+import {Alert} from 'react-native';
 import React from 'react';
 import {describe, it, expect, jest, afterEach} from '@jest/globals';
-import {render, cleanup} from '@testing-library/react-native';
+import {render, cleanup, fireEvent} from '@testing-library/react-native';
 import Grid from '../../../src/components/Grid';
 import {Product} from '../../../src/models/product';
+
+jest.spyOn(Alert, 'alert');
 
 const mockSetProducts = jest.fn();
 
@@ -68,5 +70,20 @@ describe('Grid Test', () => {
     const productName = getAllByTestId('textName');
 
     expect(productName[3].props.style.textDecorationLine).toBe('line-through');
+  });
+
+  it('when you click on the trash can icon, a dialog box opens with the correct information', () => {
+    const {getAllByTestId} = render(
+      <Grid products={products} setProducts={mockSetProducts} />,
+    );
+
+    const deleteButton = getAllByTestId('deleteButton');
+    fireEvent.press(deleteButton[3]);
+
+    expect(Alert.alert).toHaveBeenCalledWith(
+      'Lista de compras',
+      'Deseja excluir este item?',
+      expect.any(Array),
+    );
   });
 });
