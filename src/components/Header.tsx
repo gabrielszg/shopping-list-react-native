@@ -8,7 +8,11 @@ function Header(): JSX.Element {
     <SafeAreaView style={styles.container}>
       <Text style={styles.title}>Minha Lista de Compras</Text>
 
-      <Image source={require('../assets/list.png')} style={styles.logo} />
+      <Image
+        testID="img"
+        source={require('../assets/list.png')}
+        style={styles.logo}
+      />
     </SafeAreaView>
   );
 }
