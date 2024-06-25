@@ -65,6 +65,7 @@ function App(): JSX.Element {
 
       {renderedButtonDeleteAll && (
         <Pressable
+          testID="deleteAllButton"
           style={styles.btnDeleteAll}
           onPress={showDeleteAllButtonAlert}>
           <FontAwesomeIcon icon={faTrash} color="#c00" />

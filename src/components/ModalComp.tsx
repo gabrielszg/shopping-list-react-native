@@ -8,10 +8,11 @@ import {faXmarkCircle} from '@fortawesome/free-solid-svg-icons';
 import {View, Modal, Pressable} from 'react-native';
 import Toast from 'react-native-toast-message';
 import {styles} from '../styles/modalComp/style';
+import {Product} from '../models/product';
 
 interface Props {
-  products: any[];
-  setProducts: React.Dispatch<React.SetStateAction<any[]>>;
+  products: Product[];
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   modalIsOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
