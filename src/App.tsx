@@ -76,6 +76,7 @@ function App(): JSX.Element {
       <Grid products={products} setProducts={setProducts} />
 
       <TouchableOpacity
+        testID="floatingButton"
         activeOpacity={0.7}
         style={styles.touchableOpacityStyle}
         onPress={() => setIsOpen(true)}>

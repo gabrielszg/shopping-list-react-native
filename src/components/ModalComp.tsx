@@ -26,6 +26,7 @@ function ModalComp({
   return (
     <View style={styles.container}>
       <Modal
+        testID="modal"
         animationType="slide"
         transparent={true}
         visible={modalIsOpen}
