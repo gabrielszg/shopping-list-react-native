@@ -5,7 +5,7 @@
 import 'react-native';
 import React from 'react';
 import {describe, it, expect, jest} from '@jest/globals';
-import {fireEvent, render} from '@testing-library/react-native';
+import {act, fireEvent, render} from '@testing-library/react-native';
 import Form from '../../../src/components/Form';
 import Toast from 'react-native-toast-message';
 
@@ -91,5 +91,37 @@ describe('Form test', () => {
       text1: 'Produto adicionado com sucesso!',
       position: 'top',
     });
+  });
+
+  it('the fields are cleared after submitting the form and when clicking to add a new product name call onKeyPress event', async () => {
+    const {getByTestId} = render(
+      <Form products={[]} setProducts={mockSetProducts} />,
+    );
+
+    await act(async () => {
+      const productNameField = getByTestId('productName');
+      fireEvent.changeText(productNameField, '');
+      fireEvent.press(productNameField);
+
+      productNameField.props.onKeyPress();
+    });
+
+    expect(Toast.hide).toBeCalled();
+  });
+
+  it('the fields are cleared after submitting the form and when clicking to add a new product name call onPressIn event', async () => {
+    const {getByTestId} = render(
+      <Form products={[]} setProducts={mockSetProducts} />,
+    );
+
+    await act(async () => {
+      const productNameField = getByTestId('productName');
+      fireEvent.changeText(productNameField, '');
+      fireEvent.press(productNameField);
+
+      productNameField.props.onPressIn();
+    });
+
+    expect(Toast.hide).toBeCalled();
   });
 });
