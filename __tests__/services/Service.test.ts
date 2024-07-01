@@ -3,7 +3,7 @@
  */
 
 import 'react-native';
-import {describe, it, expect, jest} from '@jest/globals';
+import {describe, it, expect, jest, beforeEach, afterEach} from '@jest/globals';
 import {
   findAllProducts,
   removeProduct,
@@ -11,6 +11,7 @@ import {
   updateProduct,
 } from '../../src/services/service';
 import {Product} from '../../src/models/product';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const productList: Product[] = [
   {
@@ -34,47 +35,27 @@ const product: Product = {
   isChecked: false,
 };
 
-jest.mock('../../src/services/service', () => ({
-  findAllProducts: jest
-    .fn()
-    .mockReturnValueOnce({data: JSON.stringify(productList)}),
-
-  saveProduct: jest.fn().mockImplementation(() => {
-    product.id = 100;
-    if (product.quantity <= 0) {
-      product.quantity = 1;
-    }
-    const newProducts: Product[] = [...productList, product];
-    return newProducts;
-  }),
-
-  updateProduct: jest.fn().mockImplementation(() => {
-    const productToEdit = productList[0];
-    productToEdit.isChecked = true;
-
-    const newArray = [...productList];
-    newArray[0] = productToEdit;
-    return newArray;
-  }),
-
-  removeProduct: jest.fn().mockImplementation(() => {
-    const productToRemove = productList[1];
-    productList.splice(1, 1);
-    const newArray = productList.filter(item => item !== productToRemove);
-    return newArray;
-  }),
-}));
+jest.mock('@react-native-async-storage/async-storage', () =>
+  require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
+);
 
 describe('Service Test', () => {
+  beforeEach(async () => {
+    await AsyncStorage.setItem('products', JSON.stringify(productList));
+  });
+
+  afterEach(async () => await AsyncStorage.clear());
+
   it('when searching for all products returns successfully', () => {
-    const data = findAllProducts();
-    expect(data).toEqual({data: JSON.stringify(productList)});
+    findAllProducts().then(response =>
+      expect(response).toBe(JSON.stringify(productList)),
+    );
   });
 
   it('save product successfully', () => {
     const save = saveProduct(productList, product);
     expect(save.length).toEqual(3);
-    expect(save[2].id).toEqual(100);
+    expect(save[2].id).not.toBeNull();
     expect(save[2].name).toEqual('Alho');
     expect(save[2].quantity).toEqual(5);
     expect(save[2].isChecked).toEqual(false);
@@ -84,7 +65,7 @@ describe('Service Test', () => {
     product.quantity = 0;
     const save = saveProduct(productList, product);
     expect(save.length).toEqual(3);
-    expect(save[2].id).toEqual(100);
+    expect(save[2].id).not.toBeNull();
     expect(save[2].name).toEqual('Alho');
     expect(save[2].quantity).toEqual(1);
     expect(save[2].isChecked).toEqual(false);
