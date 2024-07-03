@@ -5,6 +5,7 @@
 import 'react-native';
 import {describe, it, expect, jest, beforeEach, afterEach} from '@jest/globals';
 import {
+  removeAllproducts,
   removeProduct,
   saveProduct,
   updateProduct,
@@ -63,7 +64,7 @@ describe('Service Test', () => {
       expect(data).toEqual(JSON.stringify(productList));
     });
 
-    it('When it cannot search for all products it returns an error', async () => {
+    it('when it cannot search for all products it returns an error', async () => {
       jest.doMock('../../src/services/service', () => {
         return {
           __esModule: true,
@@ -115,6 +116,12 @@ describe('Service Test', () => {
       expect(remove.length).toEqual(1);
       expect(remove[0].name).toEqual('Arroz');
       expect(remove[1]).toBeFalsy();
+    });
+
+    it('remove all products', async () => {
+      removeAllproducts();
+      const products = await AsyncStorage.getItem('products');
+      expect(products).toBeNull();
     });
   });
 });
