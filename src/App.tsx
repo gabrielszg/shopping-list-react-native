@@ -26,11 +26,13 @@ function App(): JSX.Element {
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const getProducts = () => {
-    findAllProducts().then(result => {
-      if (result !== null) {
-        setProducts(JSON.parse(String(result)));
-      }
-    }).catch;
+    findAllProducts()
+      .then(result => {
+        if (result !== null) {
+          setProducts(JSON.parse(String(result)));
+        }
+      })
+      .catch(() => Alert.alert('Ops ocorreu um erro!', 'erro'));
   };
 
   const renderedCard = products.length === 0 ? true : false;
