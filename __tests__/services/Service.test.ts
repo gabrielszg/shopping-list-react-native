@@ -5,6 +5,7 @@
 import 'react-native';
 import {describe, it, expect, jest, beforeEach, afterEach} from '@jest/globals';
 import {
+  findAllProducts,
   removeAllproducts,
   removeProduct,
   saveProduct,
@@ -40,88 +41,69 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 );
 
 describe('Service Test', () => {
-  beforeEach(() => {
-    jest.clearAllMocks();
+  beforeEach(async () => {
+    jest.resetModules();
+    await AsyncStorage.setItem('products', JSON.stringify(productList));
   });
 
-  describe('Find all products', () => {
-    beforeEach(() => {
-      jest.resetModules();
-    });
+  afterEach(async () => await AsyncStorage.clear());
 
-    it('when searching for all products returns successfully', async () => {
-      jest.doMock('../../src/services/service', () => {
-        return {
-          __esModule: true,
-          findAllProducts: jest
-            .fn<() => Promise<string>>()
-            .mockResolvedValueOnce(JSON.stringify(productList)),
-        };
-      });
-
-      const service = await import('../../src/services/service');
-      const data = await service.findAllProducts();
-      expect(data).toEqual(JSON.stringify(productList));
-    });
-
-    it('when it cannot search for all products it returns an error', async () => {
-      jest.doMock('../../src/services/service', () => {
-        return {
-          __esModule: true,
-          findAllProducts: jest
-            .fn<() => Promise<never>>()
-            .mockRejectedValueOnce(new Error('error')),
-        };
-      });
-
-      const service = await import('../../src/services/service');
-      await expect(service.findAllProducts()).rejects.toThrow('error');
-    });
+  it('when searching for all products returns successfully', async () => {
+    const data = await findAllProducts();
+    expect(data).toEqual(JSON.stringify(productList));
   });
 
-  describe('Service Test without mocks', () => {
-    beforeEach(async () => {
-      await AsyncStorage.setItem('products', JSON.stringify(productList));
+  it('when it cannot search for all products it returns an error', async () => {
+    jest.doMock('@react-native-async-storage/async-storage', () => {
+      return {
+        __esModule: true,
+        getItem: jest.fn<() => Promise<never>>().mockRejectedValueOnce({
+          message: "Cannot read properties of undefined (reading 'getItem')",
+        }),
+      };
     });
 
-    afterEach(async () => await AsyncStorage.clear());
+    const service = await import('../../src/services/service');
+    await expect(service.findAllProducts()).rejects.toThrow(
+      "Cannot read properties of undefined (reading 'getItem')",
+    );
+  });
 
-    it('save product successfully', () => {
-      const save = saveProduct(productList, product);
-      expect(save.length).toEqual(3);
-      expect(save[2].id).not.toBeNull();
-      expect(save[2].name).toEqual('Alho');
-      expect(save[2].quantity).toEqual(5);
-      expect(save[2].isChecked).toEqual(false);
-    });
+  it('save product successfully', () => {
+    const save = saveProduct(productList, product);
+    expect(save.length).toEqual(3);
+    expect(save[2].id).not.toBeNull();
+    expect(save[2].name).toEqual('Alho');
+    expect(save[2].quantity).toEqual(5);
+    expect(save[2].isChecked).toEqual(false);
+  });
 
-    it('when the quantity is zero or less, switch to one', () => {
-      product.quantity = 0;
-      const save = saveProduct(productList, product);
-      expect(save.length).toEqual(3);
-      expect(save[2].id).not.toBeNull();
-      expect(save[2].name).toEqual('Alho');
-      expect(save[2].quantity).toEqual(1);
-      expect(save[2].isChecked).toEqual(false);
-    });
+  it('when the quantity is zero or less, switch to one', () => {
+    product.quantity = 0;
+    const save = saveProduct(productList, product);
+    expect(save.length).toEqual(3);
+    expect(save[2].id).not.toBeNull();
+    expect(save[2].name).toEqual('Alho');
+    expect(save[2].quantity).toEqual(1);
+    expect(save[2].isChecked).toEqual(false);
+  });
 
-    it('when the product is checked update the list', () => {
-      const update = updateProduct(productList, productList[0], true);
-      expect(update.length).toEqual(2);
-      expect(update[0].isChecked).toEqual(true);
-    });
+  it('when the product is checked update the list', () => {
+    const update = updateProduct(productList, productList[0], true);
+    expect(update.length).toEqual(2);
+    expect(update[0].isChecked).toEqual(true);
+  });
 
-    it('when remove product return updated list', () => {
-      const remove = removeProduct(productList, 1);
-      expect(remove.length).toEqual(1);
-      expect(remove[0].name).toEqual('Arroz');
-      expect(remove[1]).toBeFalsy();
-    });
+  it('when remove product return updated list', () => {
+    const remove = removeProduct(productList, 1);
+    expect(remove.length).toEqual(1);
+    expect(remove[0].name).toEqual('Arroz');
+    expect(remove[1]).toBeFalsy();
+  });
 
-    it('remove all products', async () => {
-      removeAllproducts();
-      const products = await AsyncStorage.getItem('products');
-      expect(products).toBeNull();
-    });
+  it('remove all products', async () => {
+    removeAllproducts();
+    const products = await AsyncStorage.getItem('products');
+    expect(products).toBeNull();
   });
 });

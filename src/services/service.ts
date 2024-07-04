@@ -6,7 +6,9 @@ export const findAllProducts = async () => {
     const response = await retrieveData();
     return response;
   } catch (error) {
-    throw error;
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
   }
 };
 
