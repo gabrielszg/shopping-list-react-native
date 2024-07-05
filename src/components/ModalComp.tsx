@@ -36,6 +36,7 @@ function ModalComp({
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Pressable
+              testID="modalCloseButton"
               style={styles.btnCloseModal}
               onPress={() => setIsOpen(!modalIsOpen)}>
               <FontAwesomeIcon icon={faXmarkCircle} size={20} />
