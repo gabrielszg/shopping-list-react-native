@@ -50,20 +50,7 @@ describe('App test', () => {
     await AsyncStorage.setItem('products', JSON.stringify(productList));
   });
 
-  const mockHandleDeleteAll = jest.fn().mockImplementation(async () => {
-    await AsyncStorage.removeItem('products');
-    productList = [];
-  });
-  const alertSpy = jest
-    .spyOn(Alert, 'alert')
-    .mockImplementation((title, message, buttons) => {
-      //@ts-ignore
-      buttons[1] = {
-        text: 'Ok',
-        onPress: mockHandleDeleteAll,
-        style: 'default',
-      };
-    });
+  const alertSpy = jest.spyOn(Alert, 'alert');
 
   it('renders correctly', async () => {
     await waitFor(() => {
@@ -134,10 +121,7 @@ describe('App test', () => {
     //@ts-ignore
     alertSpy.mock.calls[0][2][1].onPress();
 
-    await waitFor(() => {
-      expect(mockHandleDeleteAll).toBeCalledTimes(1);
-      expect(productList.length).toEqual(0);
-    });
+    expect(await AsyncStorage.getItem('products')).toBeNull();
   });
 
   it('when the product list is empty, render the card', async () => {
