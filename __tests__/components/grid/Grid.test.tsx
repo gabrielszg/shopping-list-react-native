@@ -66,6 +66,20 @@ describe('Grid Test', () => {
     expect(checkbox[3].props.accessibilityState.checked).toBeTruthy();
   });
 
+  it('when clicking on the checkbox the checked must be true', () => {
+    const {getAllByTestId} = render(
+      <Grid products={products} setProducts={mockSetProducts} />,
+    );
+
+    const checkbox = getAllByTestId('checkbox');
+
+    expect(checkbox[2].props.accessibilityState.checked).toBe(false);
+
+    fireEvent(checkbox[2], 'change');
+
+    expect(checkbox[2].props.accessibilityState.checked).toBe(true);
+  });
+
   it('when a product has been marked, its name must be crossed out', () => {
     const {getAllByTestId} = render(
       <Grid products={products} setProducts={mockSetProducts} />,
