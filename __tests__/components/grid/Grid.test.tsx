@@ -45,22 +45,7 @@ const products: Product[] = [
 describe('Grid Test', () => {
   afterEach(cleanup);
 
-  const mockHandleDelete = jest.fn().mockImplementation(() => {
-    const product = products[index];
-    products.splice(index, 1);
-    products.filter(item => item !== product);
-  });
-  const index = products.indexOf(products[3]);
-  const alertSpy = jest
-    .spyOn(Alert, 'alert')
-    .mockImplementation((title, message, buttons) => {
-      //@ts-ignore
-      buttons[1] = {
-        text: 'Ok',
-        onPress: () => mockHandleDelete(index),
-        style: 'default',
-      };
-    });
+  const alertSpy = jest.spyOn(Alert, 'alert');
 
   it('see if item is on the list', () => {
     const {getByText} = render(
@@ -121,7 +106,6 @@ describe('Grid Test', () => {
     //@ts-ignore
     alertSpy.mock.calls[0][2][1].onPress();
 
-    expect(mockHandleDelete).toHaveBeenCalledWith(3);
     expect(products.length).toEqual(3);
   });
 
