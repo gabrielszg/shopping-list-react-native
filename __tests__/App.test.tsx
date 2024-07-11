@@ -21,6 +21,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Product} from '../src/models/product';
 import {Alert} from 'react-native';
+import * as service from '../src/services/service';
 
 jest.mock('react-native-toast-message', () => 'Toast');
 
@@ -44,18 +45,35 @@ let productList: Product[] = [
 ];
 
 describe('App test', () => {
+  const findAllProductsSpy = jest.spyOn(service, 'findAllProducts');
+  const alertSpy = jest.spyOn(Alert, 'alert');
+
   afterEach(cleanup);
 
   beforeEach(async () => {
     await AsyncStorage.setItem('products', JSON.stringify(productList));
   });
 
-  const alertSpy = jest.spyOn(Alert, 'alert');
-
   it('renders correctly', async () => {
     await waitFor(() => {
       render(<App />);
     });
+  });
+
+  it('when there is an error when find all products, show an error alert', async () => {
+    findAllProductsSpy.mockReturnValue(
+      new Promise((resolve, reject) => {
+        reject(() => {});
+      }),
+    );
+
+    render(<App />);
+
+    await waitFor(() =>
+      expect(Alert.alert).toHaveBeenCalledWith('Ops ocorreu um erro!', 'erro'),
+    );
+
+    findAllProductsSpy.mockRestore();
   });
 
   it('when product list is empty, not render delete all button', async () => {
@@ -103,8 +121,8 @@ describe('App test', () => {
     });
 
     //@ts-ignore
-    expect(alertSpy.mock.calls[0][2][0].text).toEqual('Cancelar');
-    expect(alertSpy.mock.results[0].value).toBeUndefined();
+    expect(alertSpy.mock.calls[1][2][0].text).toEqual('Cancelar');
+    expect(alertSpy.mock.results[1].value).toBeUndefined();
   });
 
   it('when you click on the delete all button, an alert open and when you click ok delete all products', async () => {
@@ -116,10 +134,10 @@ describe('App test', () => {
     });
 
     //@ts-ignore
-    expect(alertSpy.mock.calls[0][2][1].text).toEqual('Ok');
+    expect(alertSpy.mock.calls[2][2][1].text).toEqual('Ok');
 
     //@ts-ignore
-    alertSpy.mock.calls[0][2][1].onPress();
+    alertSpy.mock.calls[2][2][1].onPress();
 
     expect(await AsyncStorage.getItem('products')).toBeNull();
   });
