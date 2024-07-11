@@ -16,6 +16,7 @@ function Card({modalIsOpen, setIsOpen}: Props): JSX.Element {
       <Text style={styles.body}>Adicione itens a sua lista de compras</Text>
 
       <Pressable
+        testID="btnAddNewList"
         style={styles.btnAddNewList}
         onPress={() => setIsOpen(!modalIsOpen)}>
         <Text style={styles.titleBtnAddNewList}>Começar minha lista</Text>

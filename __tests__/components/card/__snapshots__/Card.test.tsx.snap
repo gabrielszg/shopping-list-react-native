@@ -1,0 +1,189 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`card renders correctly 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#fff",
+      "borderRadius": 10,
+      "marginLeft": 15,
+      "marginRight": 15,
+      "marginTop": 135,
+      "padding": 20,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "color": "#000",
+        "fontSize": 25,
+        "fontWeight": "bold",
+        "marginVertical": 8,
+        "textAlign": "center",
+      }
+    }
+  >
+    Sua lista de compras está vazia!
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#000",
+        "fontSize": 15,
+        "marginBottom": 10,
+        "textAlign": "center",
+      }
+    }
+  >
+    Adicione itens a sua lista de compras
+  </Text>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "rgb(57, 57, 226)",
+        "border": "none",
+        "borderRadius": 20,
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "padding": 10,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#fff",
+          "fontSize": 16,
+        }
+      }
+    >
+      Começar minha lista
+    </Text>
+  </View>
+</View>
+`;
+
+exports[`renders correctly 1`] = `
+<View
+  style={
+    {
+      "backgroundColor": "#fff",
+      "borderRadius": 10,
+      "marginLeft": 15,
+      "marginRight": 15,
+      "marginTop": 135,
+      "padding": 20,
+    }
+  }
+>
+  <Text
+    style={
+      {
+        "color": "#000",
+        "fontSize": 25,
+        "fontWeight": "bold",
+        "marginVertical": 8,
+        "textAlign": "center",
+      }
+    }
+  >
+    Sua lista de compras está vazia!
+  </Text>
+  <Text
+    style={
+      {
+        "color": "#000",
+        "fontSize": 15,
+        "marginBottom": 10,
+        "textAlign": "center",
+      }
+    }
+  >
+    Adicione itens a sua lista de compras
+  </Text>
+  <View
+    accessibilityState={
+      {
+        "busy": undefined,
+        "checked": undefined,
+        "disabled": undefined,
+        "expanded": undefined,
+        "selected": undefined,
+      }
+    }
+    accessibilityValue={
+      {
+        "max": undefined,
+        "min": undefined,
+        "now": undefined,
+        "text": undefined,
+      }
+    }
+    accessible={true}
+    collapsable={false}
+    focusable={true}
+    onBlur={[Function]}
+    onClick={[Function]}
+    onFocus={[Function]}
+    onResponderGrant={[Function]}
+    onResponderMove={[Function]}
+    onResponderRelease={[Function]}
+    onResponderTerminate={[Function]}
+    onResponderTerminationRequest={[Function]}
+    onStartShouldSetResponder={[Function]}
+    style={
+      {
+        "alignItems": "center",
+        "backgroundColor": "rgb(57, 57, 226)",
+        "border": "none",
+        "borderRadius": 20,
+        "flexDirection": "row",
+        "justifyContent": "center",
+        "padding": 10,
+      }
+    }
+  >
+    <Text
+      style={
+        {
+          "color": "#fff",
+          "fontSize": 16,
+        }
+      }
+    >
+      Começar minha lista
+    </Text>
+  </View>
+</View>
+`;

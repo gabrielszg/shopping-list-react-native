@@ -26,11 +26,13 @@ function App(): JSX.Element {
   const [modalIsOpen, setIsOpen] = useState(false);
 
   const getProducts = () => {
-    findAllProducts().then(result => {
-      if (result !== null) {
-        setProducts(JSON.parse(String(result)));
-      }
-    }).catch;
+    findAllProducts()
+      .then(result => {
+        if (result !== null) {
+          setProducts(JSON.parse(String(result)));
+        }
+      })
+      .catch(() => Alert.alert('Ops ocorreu um erro!', 'erro'));
   };
 
   const renderedCard = products.length === 0 ? true : false;
@@ -65,6 +67,7 @@ function App(): JSX.Element {
 
       {renderedButtonDeleteAll && (
         <Pressable
+          testID="deleteAllButton"
           style={styles.btnDeleteAll}
           onPress={showDeleteAllButtonAlert}>
           <FontAwesomeIcon icon={faTrash} color="#c00" />
@@ -75,6 +78,7 @@ function App(): JSX.Element {
       <Grid products={products} setProducts={setProducts} />
 
       <TouchableOpacity
+        testID="floatingButton"
         activeOpacity={0.7}
         style={styles.touchableOpacityStyle}
         onPress={() => setIsOpen(true)}>

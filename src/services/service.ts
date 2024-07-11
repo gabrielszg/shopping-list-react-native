@@ -1,12 +1,15 @@
-import {Alert} from 'react-native';
 import {Product} from '../models/product';
 import {storeData, retrieveData, removeData} from '../repositories/api';
 
-export const findAllProducts = () => {
-  const result = retrieveData()
-    .then(response => response)
-    .catch(() => Alert.alert('Ops ocorreu um erro!', 'erro'));
-  return result;
+export const findAllProducts = async () => {
+  try {
+    const response = await retrieveData();
+    return response;
+  } catch (error) {
+    if (error instanceof Error) {
+      throw new Error(error.message);
+    }
+  }
 };
 
 export const saveProduct = (
