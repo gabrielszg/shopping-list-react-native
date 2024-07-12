@@ -32,8 +32,8 @@
   
   <p align="center">
     <img alt="Home" src="./src/assets/home.png" width="200px">
-    <img alt="Lista" src="./src/assets/list.png" width="200px">
     <img alt="Modal1" src="./src/assets/modal_1.png" width="200px">
+    <img alt="Lista" src="./src/assets/list.png" width="200px">
     <img alt="Modal2" src="./src/assets/modal_2.png" width="200px">	
   </p>
 
