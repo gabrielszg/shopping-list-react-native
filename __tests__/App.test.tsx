@@ -61,11 +61,7 @@ describe('App test', () => {
   });
 
   it('when there is an error when find all products, show an error alert', async () => {
-    findAllProductsSpy.mockReturnValue(
-      new Promise((resolve, reject) => {
-        reject(() => {});
-      }),
-    );
+    findAllProductsSpy.mockRejectedValue(() => {});
 
     render(<App />);
 
