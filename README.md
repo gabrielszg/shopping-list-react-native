@@ -31,13 +31,36 @@
 ## 🎨 Layout
   
   <p align="center">
-    <img alt="Home" src="./src/assets/home.jpg" width="200px">
-    <img alt="Detalhes" src="./src/assets/details.jpg" width="200px">	
+    <img alt="Home" src="./src/assets/home.png" width="200px">
+    <img alt="Lista" src="./src/assets/list.png" width="200px">
+    <img alt="Modal1" src="./src/assets/modal_1.png" width="200px">
+    <img alt="Modal2" src="./src/assets/modal_2.png" width="200px">	
   </p>
 
 ---
 
 ## 🚀 Como executar o projeto
+
+### Pré-requisitos
+
+-   **[Node.js](https://nodejs.org/pt)**
+-   **[Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#windows-stable)**
+-   **[JDK 17](https://openjdk.org/)**
+-   **[Android Studio](https://developer.android.com/studio?hl=pt-br)**
+-   **[Para informações sobre como configurar, clique aqui](https://reactnative.dev/docs/set-up-your-environment?os=windows)**
+
+```bash
+
+# Clonar o repositório  
+$ https://github.com/gabrielszg/shopping-list-react-native.git
+
+# Abrir o terminal na raiz e instalar as dependências 
+$ yarn install
+
+# Rodar o projeto
+$ npx react-native run-android
+
+```
 
 ```bash
 
