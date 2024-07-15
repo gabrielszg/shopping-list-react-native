@@ -1,30 +1,32 @@
 import React, {useState} from 'react';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {FormInput} from '../models/formInput';
+import {Product} from '../models/product';
+import {saveProduct} from '../services/service';
 import Toast from 'react-native-toast-message';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  Pressable,
-} from 'react-native';
+import {SafeAreaView, Text, TextInput, View, Pressable} from 'react-native';
+import {styles} from '../styles/form/style';
 
-interface Product {
-  products: any[];
-  setProducts: React.Dispatch<React.SetStateAction<any[]>>;
+interface Props {
+  products: Product[];
+  setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
 }
 
-function Form({products, setProducts}: Product): JSX.Element {
-  const [name, setName] = useState('');
-  const [quantity, setQuantity] = useState('');
+function Form({products, setProducts}: Props): JSX.Element {
+  const [input, setInput] = useState<FormInput>({name: '', quantity: ''});
 
-  let product = {
+  const updateState = (key: string, value: string) => {
+    setInput(oldState => ({
+      ...oldState,
+      [key]: value,
+    }));
+  };
+
+  let product: Product = {
     id: 0,
     name: '',
     quantity: 1,
@@ -32,21 +34,21 @@ function Form({products, setProducts}: Product): JSX.Element {
   };
 
   const handleSubmit = () => {
-    if (name === '') {
+    if (input.name === '') {
       return Toast.show({
         type: 'info',
         text1: 'Informe o nome do Produto!',
       });
     }
 
-    product.id = Number(Math.random() * 100);
-    product.name = name.toUpperCase();
-    product.quantity =
-      Number(quantity) > 1 ? Number(quantity) : product.quantity;
+    const nameToUpperCase = input.name.toUpperCase();
+    const quantityStringToNumber = Number(input.quantity);
 
-    const newProducts = [...products, product];
+    product.name = nameToUpperCase;
+    product.quantity = quantityStringToNumber;
+
+    const newProducts = saveProduct(products, product);
     setProducts(newProducts);
-    AsyncStorage.setItem('products', JSON.stringify(newProducts));
 
     Toast.show({
       type: 'success',
@@ -54,8 +56,7 @@ function Form({products, setProducts}: Product): JSX.Element {
       position: 'top',
     });
 
-    setName('');
-    setQuantity('');
+    setInput({name: '', quantity: ''});
   };
 
   return (
@@ -64,11 +65,12 @@ function Form({products, setProducts}: Product): JSX.Element {
         <View>
           <Text style={styles.text}>Novo Produto</Text>
           <TextInput
+            testID="productName"
             style={styles.inputNameProduct}
             placeholder="Exemplo: Arroz"
             placeholderTextColor={'#808080'}
-            onChangeText={setName}
-            value={name}
+            onChangeText={name => updateState('name', name)}
+            value={input.name}
             onPressIn={() => Toast.hide()}
             onKeyPress={() => Toast.hide()}
             autoCapitalize="characters"
@@ -78,9 +80,10 @@ function Form({products, setProducts}: Product): JSX.Element {
         <View style={styles.viewQuantity}>
           <Text style={styles.text}>Qtd</Text>
           <TextInput
+            testID="productQuantity"
             style={styles.inputQuantity}
-            onChangeText={setQuantity}
-            value={quantity}
+            onChangeText={qtd => updateState('quantity', qtd)}
+            value={input.quantity}
             placeholder="1"
             placeholderTextColor={'#808080'}
             keyboardType="numeric"
@@ -88,67 +91,12 @@ function Form({products, setProducts}: Product): JSX.Element {
         </View>
       </View>
 
-      <Pressable style={styles.btnAdd} onPress={handleSubmit}>
+      <Pressable testID="submit" style={styles.btnAdd} onPress={handleSubmit}>
         <FontAwesomeIcon icon={faPlusCircle} color="#008000" />
         <Text style={styles.btnAddTitle}>Adicionar</Text>
       </Pressable>
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  form: {
-    flexDirection: 'row',
-  },
-
-  text: {
-    color: '#0000ff',
-    fontSize: 18,
-    paddingLeft: 10,
-    paddingBottom: 5,
-  },
-
-  inputNameProduct: {
-    width: 220,
-    padding: 10,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderRadius: 20,
-    borderColor: '#808080',
-    textTransform: 'uppercase',
-    color: '#000',
-  },
-
-  inputQuantity: {
-    width: 90,
-    padding: 10,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderRadius: 20,
-    borderColor: '#808080',
-    textTransform: 'uppercase',
-    color: '#000',
-  },
-
-  viewQuantity: {
-    marginLeft: 10,
-  },
-
-  btnAdd: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 10,
-    borderRadius: 20,
-    border: 'none',
-    backgroundColor: 'rgb(57, 57, 226)',
-  },
-
-  btnAddTitle: {
-    fontSize: 16,
-    color: '#fff',
-    marginHorizontal: 8,
-  },
-});
 
 export default Form;

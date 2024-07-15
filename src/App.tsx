@@ -4,14 +4,14 @@ import Header from './components/Header';
 import Grid from './components/Grid';
 import ModalComp from './components/ModalComp';
 
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Product} from './models/product';
+import {findAllProducts, removeAllproducts} from './services/service';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {faTrash, faPlusCircle} from '@fortawesome/free-solid-svg-icons';
 
 import {
   SafeAreaView,
-  StyleSheet,
   Pressable,
   Text,
   StatusBar,
@@ -19,24 +19,20 @@ import {
   Alert,
 } from 'react-native';
 import Card from './components/Card';
-
-interface Product {
-  id: number;
-  name: string;
-  quantity: number;
-  isChecked: boolean;
-}
+import {styles} from './styles/index/style';
 
 function App(): JSX.Element {
   const [products, setProducts] = useState<Product[]>([]);
   const [modalIsOpen, setIsOpen] = useState(false);
 
-  const getProducts = async () => {
-    const getItemLocal = await AsyncStorage.getItem('products');
-
-    if (getItemLocal !== null) {
-      setProducts(JSON.parse(getItemLocal));
-    }
+  const getProducts = () => {
+    findAllProducts()
+      .then(result => {
+        if (result !== null) {
+          setProducts(JSON.parse(String(result)));
+        }
+      })
+      .catch(() => Alert.alert('Ops ocorreu um erro!', 'erro'));
   };
 
   const renderedCard = products.length === 0 ? true : false;
@@ -53,7 +49,7 @@ function App(): JSX.Element {
     ]);
 
   const handleDeleteAll = () => {
-    AsyncStorage.removeItem('products');
+    removeAllproducts();
     setProducts([]);
   };
 
@@ -71,6 +67,7 @@ function App(): JSX.Element {
 
       {renderedButtonDeleteAll && (
         <Pressable
+          testID="deleteAllButton"
           style={styles.btnDeleteAll}
           onPress={showDeleteAllButtonAlert}>
           <FontAwesomeIcon icon={faTrash} color="#c00" />
@@ -81,6 +78,7 @@ function App(): JSX.Element {
       <Grid products={products} setProducts={setProducts} />
 
       <TouchableOpacity
+        testID="floatingButton"
         activeOpacity={0.7}
         style={styles.touchableOpacityStyle}
         onPress={() => setIsOpen(true)}>
@@ -101,53 +99,5 @@ function App(): JSX.Element {
     </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#f0f0f0',
-  },
-
-  btnDeleteAll: {
-    flexDirection: 'row',
-    marginVertical: 10,
-    padding: 10,
-    borderRadius: 5,
-    border: 'none',
-    backgroundColor: 'rgb(57, 57, 226)',
-    marginTop: 135,
-    marginLeft: 15,
-    position: 'absolute',
-    top: 0,
-    zIndex: 1,
-    marginHorizontal: 5,
-  },
-
-  btnDeleteAllTitle: {
-    fontSize: 16,
-    color: '#fff',
-    textAlign: 'center',
-    marginHorizontal: 8,
-  },
-
-  viewGrid: {
-    marginTop: 20,
-  },
-
-  touchableOpacityStyle: {
-    position: 'absolute',
-    width: 50,
-    height: 50,
-    alignItems: 'center',
-    justifyContent: 'center',
-    right: 30,
-    bottom: 30,
-  },
-
-  floatingButtonStyle: {
-    width: 70,
-    height: 70,
-  },
-});
 
 export default App;
