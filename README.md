@@ -68,7 +68,11 @@ $ npx react-native run-android
 $ cd android
 
 # Rodar o comando
+# Linux/macOS
 $ ./gradlew assembleRelease
+
+# Windows
+$ .\gradlew.bat assembleRelease
 
 # O APK será gerado e estará na pasta
 android\app\build\outputs\apk\release\app-release.apk
