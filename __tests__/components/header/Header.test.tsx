@@ -22,6 +22,6 @@ describe('Header test', () => {
 
     const image = getByTestId('img');
 
-    expect(image.props.source.testUri).toBe('../../../src/assets/list.png');
+    expect(image.props.source.testUri).toBe('../../../src/assets/logo.png');
   });
 });

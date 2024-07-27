@@ -10,7 +10,7 @@ function Header(): JSX.Element {
 
       <Image
         testID="img"
-        source={require('../assets/list.png')}
+        source={require('../assets/logo.png')}
         style={styles.logo}
       />
     </SafeAreaView>
