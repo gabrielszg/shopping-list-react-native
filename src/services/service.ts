@@ -52,6 +52,42 @@ export const removeProduct = (products: Product[], index: number) => {
 
 export const removeAllproducts = () => removeData();
 
+export const normalizeQuantity = (value: unknown): number => {
+  const parsed = Number(value);
+  if (!Number.isFinite(parsed) || parsed <= 0) {
+    return 1;
+  }
+  return parsed;
+};
+
+export const editProduct = async (
+  products: Product[],
+  updatedProduct: Product,
+): Promise<Product[]> => {
+  const productIndex = products.findIndex(
+    item => item.id === updatedProduct.id,
+  );
+  if (productIndex === -1) {
+    throw new Error('Produto não encontrado.');
+  }
+
+  const validQuantity = normalizeQuantity(updatedProduct.quantity);
+  const validName = updatedProduct.name.trim().toUpperCase();
+
+  const newProducts: Product[] = products.map((item, index) =>
+    index === productIndex
+      ? {
+          ...item,
+          name: validName,
+          quantity: validQuantity,
+        }
+      : item,
+  );
+
+  await storeData(newProducts);
+  return newProducts;
+};
+
 const generateId = () => Number(Math.random() * 100);
 
 const isQuantityEqualToZero = (value: number): boolean =>

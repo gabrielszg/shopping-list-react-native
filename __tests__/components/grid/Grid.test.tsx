@@ -137,4 +137,29 @@ describe('Grid Test', () => {
 
     expect(alertSpy.mock.results[0].value).toBeUndefined();
   });
+
+  it('renders edit button for each item and calls onEditProduct when clicked', () => {
+    const mockOnEditProduct = jest.fn();
+    const testProducts: Product[] = [
+      {id: 1, name: 'Arroz', quantity: 2, isChecked: false},
+      {id: 2, name: 'Feijão', quantity: 1, isChecked: true},
+    ];
+
+    const {getAllByTestId} = render(
+      <Grid
+        products={testProducts}
+        setProducts={mockSetProducts}
+        onEditProduct={mockOnEditProduct}
+      />,
+    );
+
+    const editButtons = getAllByTestId('editButton');
+    expect(editButtons.length).toEqual(2);
+
+    fireEvent.press(editButtons[0]);
+    expect(mockOnEditProduct).toHaveBeenCalledWith(testProducts[0]);
+
+    fireEvent.press(editButtons[1]);
+    expect(mockOnEditProduct).toHaveBeenCalledWith(testProducts[1]);
+  });
 });

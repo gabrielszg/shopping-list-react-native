@@ -30,4 +30,46 @@ describe('ModalComp Test', () => {
 
     expect(mockSetIsOpen).toHaveBeenCalledWith(!modalIsOpen);
   });
+
+  it('calls onClose when provided on close button press', () => {
+    const mockSetProducts = jest.fn();
+    const mockSetIsOpen = jest.fn();
+    const mockOnClose = jest.fn();
+
+    const {getByTestId} = render(
+      <ModalComp
+        products={[]}
+        setProducts={mockSetProducts}
+        modalIsOpen={true}
+        setIsOpen={mockSetIsOpen}
+        onClose={mockOnClose}
+      />,
+    );
+
+    const modalCloseButton = getByTestId('modalCloseButton');
+    fireEvent.press(modalCloseButton);
+
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
+  });
+
+  it('calls onClose on Android back button request (onRequestClose)', () => {
+    const mockSetProducts = jest.fn();
+    const mockSetIsOpen = jest.fn();
+    const mockOnClose = jest.fn();
+
+    const {getByTestId} = render(
+      <ModalComp
+        products={[]}
+        setProducts={mockSetProducts}
+        modalIsOpen={true}
+        setIsOpen={mockSetIsOpen}
+        onClose={mockOnClose}
+      />,
+    );
+
+    const modal = getByTestId('modal');
+    modal.props.onRequestClose();
+
+    expect(mockOnClose).toHaveBeenCalledTimes(1);
+  });
 });

@@ -19,17 +19,19 @@ export const styles = StyleSheet.create({
   viewCheckboxName: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
+    marginRight: 10,
   },
 
   textName: {
-    width: 200,
+    flex: 1,
     fontSize: 20,
     color: '#000',
   },
 
   textNameStrikethrough: {
     textDecorationLine: 'line-through',
-    width: 200,
+    flex: 1,
     fontSize: 20,
     color: '#000',
   },
@@ -37,5 +39,15 @@ export const styles = StyleSheet.create({
   textQuantity: {
     fontSize: 20,
     color: '#000',
+    marginRight: 15,
+  },
+
+  viewActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  btnEdit: {
+    marginRight: 15,
   },
 });

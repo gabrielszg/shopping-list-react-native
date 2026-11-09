@@ -24,6 +24,7 @@ import {styles} from './styles/index/style';
 function App(): JSX.Element {
   const [products, setProducts] = useState<Product[]>([]);
   const [modalIsOpen, setIsOpen] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   const getProducts = () => {
     findAllProducts()
@@ -53,6 +54,16 @@ function App(): JSX.Element {
     setProducts([]);
   };
 
+  const handleEditProduct = (product: Product) => {
+    setEditingProduct(product);
+    setIsOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpen(false);
+    setEditingProduct(null);
+  };
+
   useEffect(() => {
     getProducts();
   }, [setProducts]);
@@ -75,13 +86,20 @@ function App(): JSX.Element {
         </Pressable>
       )}
 
-      <Grid products={products} setProducts={setProducts} />
+      <Grid
+        products={products}
+        setProducts={setProducts}
+        onEditProduct={handleEditProduct}
+      />
 
       <TouchableOpacity
         testID="floatingButton"
         activeOpacity={0.7}
         style={styles.touchableOpacityStyle}
-        onPress={() => setIsOpen(true)}>
+        onPress={() => {
+          setEditingProduct(null);
+          setIsOpen(true);
+        }}>
         <FontAwesomeIcon
           icon={faPlusCircle}
           style={styles.floatingButtonStyle}
@@ -95,6 +113,8 @@ function App(): JSX.Element {
         setIsOpen={setIsOpen}
         products={products}
         setProducts={setProducts}
+        editingProduct={editingProduct}
+        onClose={handleCloseModal}
       />
     </SafeAreaView>
   );

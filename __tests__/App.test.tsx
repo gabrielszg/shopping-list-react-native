@@ -23,7 +23,12 @@ import {Product} from '../src/models/product';
 import {Alert} from 'react-native';
 import * as service from '../src/services/service';
 
-jest.mock('react-native-toast-message', () => 'Toast');
+jest.mock('react-native-toast-message', () => {
+  const MockToast: any = () => null;
+  MockToast.show = () => {};
+  MockToast.hide = () => {};
+  return MockToast;
+});
 
 jest.mock('@react-native-async-storage/async-storage', () =>
   require('@react-native-async-storage/async-storage/jest/async-storage-mock'),
@@ -180,6 +185,81 @@ describe('App test', () => {
       const modal = getByTestId('modal');
       modal.props.onRequestClose();
       expect(modal.props.visible).toBeFalsy();
+    });
+  });
+
+  it('when clicking on edit button, opens modal prefilled with item data', async () => {
+    const {getAllByTestId, getByTestId, getByText} = render(<App />);
+
+    await waitFor(() => {
+      const editButtons = getAllByTestId('editButton');
+      expect(editButtons.length).toBeGreaterThan(0);
+      fireEvent.press(editButtons[0]);
+    });
+
+    await waitFor(() => {
+      expect(getByText('Editar Produto')).toBeTruthy();
+      expect(getByTestId('productName').props.value).toEqual('Arroz');
+      expect(getByTestId('productQuantity').props.value).toEqual('2');
+    });
+  });
+
+  it('when editing a product and saving, updates the product and persists in AsyncStorage', async () => {
+    const {getAllByTestId, getByTestId, getByText} = render(<App />);
+
+    await waitFor(() => {
+      const editButtons = getAllByTestId('editButton');
+      fireEvent.press(editButtons[0]);
+    });
+
+    await waitFor(() => {
+      expect(getByText('Editar Produto')).toBeTruthy();
+    });
+
+    fireEvent.changeText(getByTestId('productName'), 'Arroz Basmati');
+    fireEvent.changeText(getByTestId('productQuantity'), '3.5');
+
+    await act(async () => {
+      fireEvent.press(getByTestId('submit'));
+    });
+
+    await waitFor(async () => {
+      expect(getByText('ARROZ BASMATI')).toBeTruthy();
+      expect(getByText('3.5')).toBeTruthy();
+
+      const stored = await AsyncStorage.getItem('products');
+      const parsed = JSON.parse(String(stored));
+      expect(parsed[0].name).toEqual('ARROZ BASMATI');
+      expect(parsed[0].quantity).toEqual(3.5);
+      expect(parsed[0].id).toEqual(120);
+      expect(parsed[1].name).toEqual('Feijão');
+    });
+  });
+
+  it('when cancelling edit via close button, original data is preserved', async () => {
+    const {getAllByTestId, getByTestId, getByText} = render(<App />);
+
+    await waitFor(() => {
+      const editButtons = getAllByTestId('editButton');
+      fireEvent.press(editButtons[0]);
+    });
+
+    await waitFor(() => {
+      expect(getByText('Editar Produto')).toBeTruthy();
+    });
+
+    fireEvent.changeText(getByTestId('productName'), 'Nome Alterado');
+    fireEvent.changeText(getByTestId('productQuantity'), '99');
+
+    const closeButton = getByTestId('modalCloseButton');
+    fireEvent.press(closeButton);
+
+    await waitFor(async () => {
+      expect(getByText('Arroz')).toBeTruthy();
+      const stored = await AsyncStorage.getItem('products');
+      const parsed = JSON.parse(String(stored));
+      expect(parsed[0].name).toEqual('Arroz');
+      expect(parsed[0].quantity).toEqual(2);
     });
   });
 });
