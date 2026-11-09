@@ -12,7 +12,10 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     marginVertical: 10,
     padding: 15,
+    borderColor: '#0000004c',
+    borderWidth: 0.5,
     borderRadius: 10,
+    elevation: 2,
     backgroundColor: '#fff',
   },
 
@@ -34,6 +37,7 @@ export const styles = StyleSheet.create({
     flex: 1,
     fontSize: 20,
     color: '#000',
+    fontStyle: 'italic',
   },
 
   textQuantity: {
