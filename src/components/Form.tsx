@@ -1,12 +1,12 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 
 import {FormInput} from '../models/formInput';
 import {Product} from '../models/product';
-import {saveProduct} from '../services/service';
+import {saveProduct, editProduct} from '../services/service';
 import Toast from 'react-native-toast-message';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faPlusCircle} from '@fortawesome/free-solid-svg-icons';
+import {faPlusCircle, faFloppyDisk} from '@fortawesome/free-solid-svg-icons';
 
 import {SafeAreaView, Text, TextInput, View, Pressable} from 'react-native';
 import {styles} from '../styles/form/style';
@@ -14,10 +14,31 @@ import {styles} from '../styles/form/style';
 interface Props {
   products: Product[];
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+  editingProduct?: Product | null;
+  onClose?: () => void;
 }
 
-function Form({products, setProducts}: Props): JSX.Element {
-  const [input, setInput] = useState<FormInput>({name: '', quantity: ''});
+function Form({
+  products,
+  setProducts,
+  editingProduct,
+  onClose,
+}: Props): JSX.Element {
+  const [input, setInput] = useState<FormInput>({
+    name: editingProduct ? editingProduct.name : '',
+    quantity: editingProduct ? String(editingProduct.quantity) : '',
+  });
+
+  useEffect(() => {
+    if (editingProduct) {
+      setInput({
+        name: editingProduct.name,
+        quantity: String(editingProduct.quantity),
+      });
+    } else {
+      setInput({name: '', quantity: ''});
+    }
+  }, [editingProduct]);
 
   const updateState = (key: string, value: string) => {
     setInput(oldState => ({
@@ -33,12 +54,42 @@ function Form({products, setProducts}: Props): JSX.Element {
     isChecked: false,
   };
 
-  const handleSubmit = () => {
-    if (input.name === '') {
+  const handleSubmit = async () => {
+    if (input.name.trim() === '') {
       return Toast.show({
         type: 'info',
         text1: 'Informe o nome do Produto!',
       });
+    }
+
+    if (editingProduct) {
+      try {
+        const productToEdit: Product = {
+          ...editingProduct,
+          name: input.name,
+          quantity: Number(input.quantity),
+        };
+
+        const newProducts = await editProduct(products, productToEdit);
+        setProducts(newProducts);
+
+        Toast.show({
+          type: 'success',
+          text1: 'Produto atualizado com sucesso!',
+          position: 'top',
+        });
+
+        if (onClose) {
+          onClose();
+        }
+      } catch (error) {
+        Toast.show({
+          type: 'error',
+          text1: 'Erro ao atualizar produto!',
+          position: 'top',
+        });
+      }
+      return;
     }
 
     const nameToUpperCase = input.name.toUpperCase();
@@ -63,7 +114,9 @@ function Form({products, setProducts}: Props): JSX.Element {
     <SafeAreaView>
       <View style={styles.form}>
         <View>
-          <Text style={styles.text}>Novo Produto</Text>
+          <Text style={styles.text}>
+            {editingProduct ? 'Editar Produto' : 'Novo Produto'}
+          </Text>
           <TextInput
             testID="productName"
             style={styles.inputNameProduct}
@@ -92,8 +145,13 @@ function Form({products, setProducts}: Props): JSX.Element {
       </View>
 
       <Pressable testID="submit" style={styles.btnAdd} onPress={handleSubmit}>
-        <FontAwesomeIcon icon={faPlusCircle} color="#008000" />
-        <Text style={styles.btnAddTitle}>Adicionar</Text>
+        <FontAwesomeIcon
+          icon={editingProduct ? faFloppyDisk : faPlusCircle}
+          color={editingProduct ? '#fff' : '#008000'}
+        />
+        <Text style={styles.btnAddTitle}>
+          {editingProduct ? 'Salvar' : 'Adicionar'}
+        </Text>
       </Pressable>
     </SafeAreaView>
   );

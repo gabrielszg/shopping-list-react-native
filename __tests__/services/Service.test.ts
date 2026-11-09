@@ -10,6 +10,8 @@ import {
   removeProduct,
   saveProduct,
   updateProduct,
+  editProduct,
+  normalizeQuantity,
 } from '../../src/services/service';
 import {Product} from '../../src/models/product';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -105,5 +107,129 @@ describe('Service Test', () => {
     removeAllproducts();
     const products = await AsyncStorage.getItem('products');
     expect(products).toBeNull();
+  });
+
+  describe('normalizeQuantity', () => {
+    it('returns positive numbers correctly', () => {
+      expect(normalizeQuantity(5)).toEqual(5);
+      expect(normalizeQuantity('10')).toEqual(10);
+    });
+
+    it('preserves valid decimal quantities without truncating or rounding', () => {
+      expect(normalizeQuantity(2.5)).toEqual(2.5);
+      expect(normalizeQuantity('3.75')).toEqual(3.75);
+    });
+
+    it('returns 1 for zero or negative values', () => {
+      expect(normalizeQuantity(0)).toEqual(1);
+      expect(normalizeQuantity(-2)).toEqual(1);
+      expect(normalizeQuantity('-5.5')).toEqual(1);
+    });
+
+    it('returns 1 for non-numeric, empty or invalid values (NaN, Infinity)', () => {
+      expect(normalizeQuantity('abc')).toEqual(1);
+      expect(normalizeQuantity('')).toEqual(1);
+      expect(normalizeQuantity(NaN)).toEqual(1);
+      expect(normalizeQuantity(Infinity)).toEqual(1);
+      expect(normalizeQuantity(-Infinity)).toEqual(1);
+    });
+  });
+
+  describe('editProduct', () => {
+    const initialList: Product[] = [
+      {id: 10, name: 'ARROZ', quantity: 2, isChecked: false},
+      {id: 20, name: 'FEIJÃO', quantity: 1, isChecked: true},
+      {id: 30, name: 'MACARRÃO', quantity: 3, isChecked: false},
+    ];
+
+    it('edits both name and quantity successfully and persists to AsyncStorage', async () => {
+      const updated = await editProduct(initialList, {
+        id: 20,
+        name: 'feijão preto',
+        quantity: 4,
+        isChecked: true,
+      });
+
+      expect(updated.length).toEqual(3);
+      expect(updated[1]).toEqual({
+        id: 20,
+        name: 'FEIJÃO PRETO',
+        quantity: 4,
+        isChecked: true,
+      });
+
+      const stored = await AsyncStorage.getItem('products');
+      expect(stored).toEqual(JSON.stringify(updated));
+    });
+
+    it('edits only name while keeping original quantity and isChecked', async () => {
+      const updated = await editProduct(initialList, {
+        id: 10,
+        name: 'arroz integral',
+        quantity: 2,
+        isChecked: false,
+      });
+
+      expect(updated[0].name).toEqual('ARROZ INTEGRAL');
+      expect(updated[0].quantity).toEqual(2);
+      expect(updated[0].isChecked).toEqual(false);
+    });
+
+    it('edits only quantity while keeping original name', async () => {
+      const updated = await editProduct(initialList, {
+        id: 30,
+        name: 'MACARRÃO',
+        quantity: 5,
+        isChecked: false,
+      });
+
+      expect(updated[2].name).toEqual('MACARRÃO');
+      expect(updated[2].quantity).toEqual(5);
+    });
+
+    it('preserves decimal quantities in editProduct', async () => {
+      const updated = await editProduct(initialList, {
+        id: 10,
+        name: 'ARROZ',
+        quantity: 2.5,
+        isChecked: false,
+      });
+
+      expect(updated[0].quantity).toEqual(2.5);
+    });
+
+    it('normalizes invalid quantity (0, negative, NaN) to 1', async () => {
+      const updated = await editProduct(initialList, {
+        id: 10,
+        name: 'ARROZ',
+        quantity: 0,
+        isChecked: false,
+      });
+
+      expect(updated[0].quantity).toEqual(1);
+    });
+
+    it('guarantees other items in the list remain unaltered and preserve order', async () => {
+      const updated = await editProduct(initialList, {
+        id: 20,
+        name: 'FEIJÃO CARIOCA',
+        quantity: 1,
+        isChecked: true,
+      });
+
+      expect(updated[0]).toEqual(initialList[0]);
+      expect(updated[2]).toEqual(initialList[2]);
+    });
+
+    it('throws error and does not persist when product ID is not found in the list', async () => {
+      await expect(
+        editProduct(initialList, {
+          id: 999,
+          name: 'PRODUTO INEXISTENTE',
+          quantity: 1,
+          isChecked: false,
+        }),
+      ).rejects.toThrow('Produto não encontrado.');
+    });
   });
 });

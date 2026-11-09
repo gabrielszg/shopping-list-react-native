@@ -4,7 +4,7 @@
 
 import 'react-native';
 import React from 'react';
-import {describe, it, expect, jest} from '@jest/globals';
+import {describe, it, expect, jest, beforeEach} from '@jest/globals';
 import {act, fireEvent, render} from '@testing-library/react-native';
 import Form from '../../../src/components/Form';
 import Toast from 'react-native-toast-message';
@@ -21,6 +21,9 @@ jest.mock('@react-native-async-storage/async-storage', () =>
 const mockSetProducts = jest.fn();
 
 describe('Form test', () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
+  });
   it('check if show correctly product input name placeholder', () => {
     const {getByPlaceholderText} = render(
       <Form products={[]} setProducts={mockSetProducts} />,
@@ -123,5 +126,149 @@ describe('Form test', () => {
     });
 
     expect(Toast.hide).toBeCalled();
+  });
+
+  describe('Form Edit Mode', () => {
+    const editingProduct = {
+      id: 50,
+      name: 'ARROZ',
+      quantity: 2.5,
+      isChecked: false,
+    };
+
+    const initialProducts = [editingProduct];
+
+    it('renders "Editar Produto" and "Salvar" when editingProduct is passed', () => {
+      const {getByText, getByTestId} = render(
+        <Form
+          products={initialProducts}
+          setProducts={mockSetProducts}
+          editingProduct={editingProduct}
+        />,
+      );
+
+      expect(getByText('Editar Produto')).toBeTruthy();
+      expect(getByTestId('submit')).toBeTruthy();
+      expect(getByText('Salvar')).toBeTruthy();
+    });
+
+    it('pre-populates inputs with the editing product data', () => {
+      const {getByTestId} = render(
+        <Form
+          products={initialProducts}
+          setProducts={mockSetProducts}
+          editingProduct={editingProduct}
+        />,
+      );
+
+      expect(getByTestId('productName').props.value).toEqual('ARROZ');
+      expect(getByTestId('productQuantity').props.value).toEqual('2.5');
+    });
+
+    it('reinitializes inputs when editingProduct prop changes', () => {
+      const {getByTestId, rerender} = render(
+        <Form
+          products={initialProducts}
+          setProducts={mockSetProducts}
+          editingProduct={editingProduct}
+        />,
+      );
+
+      expect(getByTestId('productName').props.value).toEqual('ARROZ');
+
+      const nextProduct = {
+        id: 60,
+        name: 'FEIJÃO',
+        quantity: 1,
+        isChecked: true,
+      };
+
+      rerender(
+        <Form
+          products={[...initialProducts, nextProduct]}
+          setProducts={mockSetProducts}
+          editingProduct={nextProduct}
+        />,
+      );
+
+      expect(getByTestId('productName').props.value).toEqual('FEIJÃO');
+      expect(getByTestId('productQuantity').props.value).toEqual('1');
+    });
+
+    it('shows info toast and does not submit when name is empty in edit mode', async () => {
+      const {getByTestId} = render(
+        <Form
+          products={initialProducts}
+          setProducts={mockSetProducts}
+          editingProduct={editingProduct}
+        />,
+      );
+
+      fireEvent.changeText(getByTestId('productName'), '   ');
+      fireEvent.press(getByTestId('submit'));
+
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'info',
+        text1: 'Informe o nome do Produto!',
+      });
+      expect(mockSetProducts).not.toHaveBeenCalled();
+    });
+
+    it('submits edit successfully, calls setProducts, shows success toast and calls onClose', async () => {
+      const mockOnClose = jest.fn();
+      const {getByTestId} = render(
+        <Form
+          products={initialProducts}
+          setProducts={mockSetProducts}
+          editingProduct={editingProduct}
+          onClose={mockOnClose}
+        />,
+      );
+
+      fireEvent.changeText(getByTestId('productName'), 'Arroz Parboilizado');
+      fireEvent.changeText(getByTestId('productQuantity'), '4');
+
+      await act(async () => {
+        fireEvent.press(getByTestId('submit'));
+      });
+
+      expect(mockSetProducts).toHaveBeenCalledWith([
+        {
+          id: 50,
+          name: 'ARROZ PARBOILIZADO',
+          quantity: 4,
+          isChecked: false,
+        },
+      ]);
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'success',
+        text1: 'Produto atualizado com sucesso!',
+        position: 'top',
+      });
+      expect(mockOnClose).toHaveBeenCalled();
+    });
+
+    it('shows error toast and does not call onClose when editProduct throws', async () => {
+      const mockOnClose = jest.fn();
+      const {getByTestId} = render(
+        <Form
+          products={[]}
+          setProducts={mockSetProducts}
+          editingProduct={editingProduct}
+          onClose={mockOnClose}
+        />,
+      );
+
+      await act(async () => {
+        fireEvent.press(getByTestId('submit'));
+      });
+
+      expect(Toast.show).toHaveBeenCalledWith({
+        type: 'error',
+        text1: 'Erro ao atualizar produto!',
+        position: 'top',
+      });
+      expect(mockOnClose).not.toHaveBeenCalled();
+    });
   });
 });

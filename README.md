@@ -23,6 +23,7 @@
 - [x] onde o usuário informa o nome do produto e a quantidade
   - [x] e adiciona na lista
   - [x] pode marcar o produto que já foi pego
+  - [x] editar o produto na lista
   - [x] excluir o produto selecionado
   - [x] limpar a lista de produtos
 

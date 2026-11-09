@@ -15,6 +15,8 @@ interface Props {
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
   modalIsOpen: boolean;
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  editingProduct?: Product | null;
+  onClose?: () => void;
 }
 
 function ModalComp({
@@ -22,7 +24,17 @@ function ModalComp({
   setProducts,
   modalIsOpen,
   setIsOpen,
+  editingProduct,
+  onClose,
 }: Props): JSX.Element {
+  const handleClose = () => {
+    if (onClose) {
+      onClose();
+    } else {
+      setIsOpen(false);
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Modal
@@ -30,19 +42,23 @@ function ModalComp({
         animationType="slide"
         transparent={true}
         visible={modalIsOpen}
-        onRequestClose={() => {
-          setIsOpen(!modalIsOpen);
-        }}>
+        onRequestClose={handleClose}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
             <Pressable
               testID="modalCloseButton"
               style={styles.btnCloseModal}
-              onPress={() => setIsOpen(!modalIsOpen)}>
+              onPress={handleClose}>
               <FontAwesomeIcon icon={faXmarkCircle} size={20} />
             </Pressable>
 
-            <Form products={products} setProducts={setProducts} />
+            <Form
+              key={editingProduct ? `edit-${editingProduct.id}` : 'create'}
+              products={products}
+              setProducts={setProducts}
+              editingProduct={editingProduct}
+              onClose={handleClose}
+            />
           </View>
         </View>
 

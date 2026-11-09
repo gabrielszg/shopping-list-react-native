@@ -5,7 +5,7 @@ import {removeProduct, updateProduct} from '../services/service';
 import CheckBox from '@react-native-community/checkbox';
 
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
-import {faTrash} from '@fortawesome/free-solid-svg-icons';
+import {faTrash, faPen} from '@fortawesome/free-solid-svg-icons';
 
 import {
   FlatList,
@@ -21,9 +21,10 @@ import {styles} from '../styles/grid/style';
 interface Props {
   products: Product[];
   setProducts: React.Dispatch<React.SetStateAction<Product[]>>;
+  onEditProduct?: (product: Product) => void;
 }
 
-function Grid({products, setProducts}: Props): JSX.Element {
+function Grid({products, setProducts, onEditProduct}: Props): JSX.Element {
   const [isSelected, setSelection] = useState<boolean[]>([]);
 
   const handleCheckboxChange = (index: number) => {
@@ -83,11 +84,19 @@ function Grid({products, setProducts}: Props): JSX.Element {
           </Text>
         </View>
         <Text style={styles.textQuantity}>{item.quantity}</Text>
-        <Pressable
-          testID="deleteButton"
-          onPress={() => showDeleteButtonAlert(index)}>
-          <FontAwesomeIcon icon={faTrash} color="#c00" size={20} />
-        </Pressable>
+        <View style={styles.viewActions}>
+          <Pressable
+            testID="editButton"
+            style={styles.btnEdit}
+            onPress={() => onEditProduct && onEditProduct(item)}>
+            <FontAwesomeIcon icon={faPen} color="#0000ff" size={18} />
+          </Pressable>
+          <Pressable
+            testID="deleteButton"
+            onPress={() => showDeleteButtonAlert(index)}>
+            <FontAwesomeIcon icon={faTrash} color="#c00" size={20} />
+          </Pressable>
+        </View>
       </View>
     );
   };
